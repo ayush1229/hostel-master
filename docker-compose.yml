@@ -1,0 +1,68 @@
+services:
+  # 1. Chief Warden Frontend
+  hostel-authority:
+    build: ./hostel-authority
+    restart: always
+
+  # 2. Student Frontend
+  hostel-frontend:
+    build: ./hostel-frontend
+    restart: always
+
+  # 3. Guard Frontend
+  hostel-guard:
+    build: ./hostel-guard
+    restart: always
+
+  # 4. Node.js Backend
+  hostel-backend:
+    build: ./hostel-backend
+    restart: always
+    env_file:
+      # Loads JWT secrets, Mailgun keys, etc.
+      - ./hostel-backend/.env
+    environment:
+      # Backend connects to PostgreSQL through the internal Docker network
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      - PORT=5000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 5. Production PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: production_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    # No ports exposed.
+    # PostgreSQL is accessible only by other Docker containers.
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 6. Public Reverse Proxy
+  # This is the ONLY service exposed to the host/Internet.
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - hostel-authority
+      - hostel-frontend
+      - hostel-guard
+      - hostel-backend
+
+volumes:
+  pgdata:

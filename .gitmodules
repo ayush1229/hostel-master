@@ -1,0 +1,12 @@
+[submodule "hostel-frontend"]
+	path = hostel-frontend
+	url = https://github.com/workonlly/hostel-frontend.git
+[submodule "hostel-backend"]
+	path = hostel-backend
+	url = https://github.com/workonlly/hostel-backend.git
+[submodule "hostel-authority"]
+	path = hostel-authority
+	url = https://github.com/workonlly/hostel-authority.git
+[submodule "hostel-guard"]
+	path = hostel-guard
+	url = https://github.com/workonlly/hostel-guard.git

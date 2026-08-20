@@ -1,0 +1,4 @@
+.env
+hostel-backend/.env
+node_modules/
+dist/
