@@ -1,0 +1,67 @@
+# Define a rate limiting zone based on client IP
+# '10m' allocates 10 megabytes of memory for the zone (can store ~160k IPs)
+# 'rate=10r/s' allows 10 requests per second per IP globally at the NGINX level
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+
+# Chief Warden Frontend
+server {
+    listen 80;
+    server_name authority.${DOMAIN};
+
+    location / {
+        proxy_pass http://hostel-authority:80;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Student Frontend
+server {
+    listen 80;
+    server_name student.${DOMAIN};
+
+    location / {
+        proxy_pass http://hostel-frontend:80;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Guard Frontend
+server {
+    listen 80;
+    server_name guard.${DOMAIN};
+
+    location / {
+        proxy_pass http://hostel-guard:80;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Backend API
+server {
+    listen 80;
+    server_name api.${DOMAIN};
+
+    location / {
+        # Apply rate limiting with a burst of 20 and no delay for burst requests
+        limit_req zone=api_limit burst=20 nodelay;
+        
+        proxy_pass http://hostel-backend:5000;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
