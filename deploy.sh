@@ -14,6 +14,17 @@ if [ ! -f ".env" ] || [ ! -f "hostel-backend/.env" ]; then
     exit 1
 fi
 
+echo "Injecting API URL into frontend submodules..."
+# Load the master .env file variables into the script
+set -a
+source .env
+set +a
+
+# Overwrite (or create) the frontend .env files with the master variable
+echo "VITE_API_URL=$VITE_API_URL" > hostel-frontend/.env
+echo "VITE_API_URL=$VITE_API_URL" > hostel-authority/.env
+echo "VITE_API_URL=$VITE_API_URL" > hostel-guard/.env
+
 # 3. Rebuild and restart the Docker stack
 echo "Stopping old containers and building new ones..."
 docker compose down
