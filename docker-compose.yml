@@ -25,9 +25,9 @@ services:
       # Backend connects to PostgreSQL through the internal Docker network
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
       - PORT=5000
-      - FRONTEND_URL=http://student.${DOMAIN}
-      - AUTHORITY_URL=http://authority.${DOMAIN}
-      - GUARD_URL=http://guard.${DOMAIN}
+      - FRONTEND_URL=https://student.${DOMAIN}
+      - AUTHORITY_URL=https://authority.${DOMAIN}
+      - GUARD_URL=https://guard.${DOMAIN}
     depends_on:
       db:
         condition: service_healthy
