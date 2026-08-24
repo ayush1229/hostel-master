@@ -13,7 +13,7 @@ EMAIL=$2
 echo "Requesting Let's Encrypt certificates for $DOMAIN..."
 echo "Domains: authority.$DOMAIN, student.$DOMAIN, guard.$DOMAIN, api.$DOMAIN"
 
-docker-compose run --rm --entrypoint "\
+docker compose run --rm --entrypoint "\
   certbot certonly --webroot -w /var/www/certbot \
     -d authority.$DOMAIN \
     -d student.$DOMAIN \
@@ -28,6 +28,6 @@ docker-compose run --rm --entrypoint "\
 
 echo ""
 echo "Reloading Nginx to apply the new certificates..."
-docker-compose exec nginx nginx -s reload
+docker compose exec nginx nginx -s reload
 
 echo "SSL setup complete!"
