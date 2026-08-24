@@ -63,11 +63,25 @@ services:
       - DOMAIN=${DOMAIN}
     volumes:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./nginx/init-ssl.sh:/docker-entrypoint.d/99-init-ssl.sh:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
     depends_on:
       - hostel-authority
       - hostel-frontend
       - hostel-guard
       - hostel-backend
 
+  # 7. Certbot for Let's Encrypt SSL
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
 volumes:
   pgdata:
+  certbot-etc:
+  certbot-www:
