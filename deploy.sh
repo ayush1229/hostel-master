@@ -39,6 +39,9 @@ sleep 10
 echo "Executing database setup script..."
 docker compose exec -T hostel-backend node scripts/setup-db.js
 
+echo "Executing database session migration script..."
+docker compose exec -T hostel-backend node db/migrate-sessions.js
+
 # 6. Run the database seed scripts (Test Deployment Only)
 echo "Seeding initial hostel data..."
 docker compose exec -T hostel-backend node scripts/seed-hostels.js
