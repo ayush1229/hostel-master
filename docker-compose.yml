@@ -54,7 +54,7 @@ services:
   # 6. Public Reverse Proxy
   # This is the ONLY service exposed to the host/Internet.
   nginx:
-    image: nginx:alpine
+    build: ./nginx
     restart: always
     ports:
       - "80:80"
@@ -63,7 +63,6 @@ services:
       - DOMAIN=${DOMAIN}
     volumes:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
-      - ./nginx/init-ssl.sh:/docker-entrypoint.d/99-init-ssl.sh:ro
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
     depends_on:
