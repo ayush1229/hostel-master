@@ -12,8 +12,8 @@ server {
 server {
     listen 443 ssl default_server;
     server_name _;
-    ssl_certificate /etc/letsencrypt/live/hostel/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/hostel/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
     ssl_reject_handshake on;
 }
 
@@ -34,8 +34,8 @@ server {
     listen 443 ssl;
     server_name authority.${DOMAIN};
 
-    ssl_certificate /etc/letsencrypt/live/hostel/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/hostel/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
     location / {
         proxy_pass http://hostel-authority:80;
@@ -63,8 +63,8 @@ server {
     listen 443 ssl;
     server_name student.${DOMAIN};
 
-    ssl_certificate /etc/letsencrypt/live/hostel/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/hostel/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
     location / {
         proxy_pass http://hostel-frontend:80;
@@ -92,8 +92,8 @@ server {
     listen 443 ssl;
     server_name guard.${DOMAIN};
 
-    ssl_certificate /etc/letsencrypt/live/hostel/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/hostel/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
     location / {
         proxy_pass http://hostel-guard:80;
@@ -121,8 +121,8 @@ server {
     listen 443 ssl;
     server_name api.${DOMAIN};
 
-    ssl_certificate /etc/letsencrypt/live/hostel/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/hostel/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
     location / {
         # Apply rate limiting with a burst of 20 and no delay for burst requests

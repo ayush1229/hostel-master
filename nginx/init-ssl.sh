@@ -1,5 +1,10 @@
 #!/bin/sh
-CERT_DIR="/etc/letsencrypt/live/hostel"
+if [ -z "$DOMAIN" ]; then
+    echo "ERROR: DOMAIN environment variable is not set."
+    exit 1
+fi
+
+CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
 if [ ! -f "$CERT_DIR/fullchain.pem" ]; then
     echo "Let's Encrypt certificates not found. Generating dummy certificates to allow Nginx to start..."
     apk add --no-cache openssl

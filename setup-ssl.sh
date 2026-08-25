@@ -23,8 +23,7 @@ docker compose run --rm --entrypoint "\
     --rsa-key-size 4096 \
     --agree-tos \
     --no-eff-email \
-    --force-renewal \
-    --cert-name hostel" certbot
+    --force-renewal" certbot
 
 echo ""
 echo "Reloading Nginx to apply the new certificates..."
