@@ -27,6 +27,7 @@ echo "VITE_API_URL=$VITE_API_URL" > hostel-guard/.env
 
 # 3. Rebuild and restart the Docker stack
 echo "Stopping old containers and building new ones..."
+export DOCKER_BUILDKIT=0
 docker compose down
 docker compose up --build -d
 
