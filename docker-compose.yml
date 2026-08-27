@@ -28,6 +28,7 @@ services:
       - FRONTEND_URL=https://student.${DOMAIN}:8443
       - AUTHORITY_URL=https://authority.${DOMAIN}:8443
       - GUARD_URL=https://guard.${DOMAIN}:8443
+      - TESTING_MODE=true
     depends_on:
       db:
         condition: service_healthy
